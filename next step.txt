@@ -1,0 +1,28 @@
+delete endpoint
+- id: path param
+
+put endpoint
+- id: path param
+- body: first_name, last_name, age
+
+patch endpoint
+- id: path param
+- body: first_name or last_name or age
+
+
+
+handle exceptions
+
+
+difference between path param and query param 
+
+<<<<<<< HEAD
+422 , 
+na3melha fi container !
+=======
+422 : error ki n3adi el request body faragh 
+na3melha fi container el app 
+>>>>>>> 4d7a50a (SECOND COMMIT)
+
+test unitaire dans le fast api 
+sur les end points crud 
