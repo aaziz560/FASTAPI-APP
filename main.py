@@ -23,7 +23,7 @@ app = FastAPI()
 
 
 # Configuration de la base de données
-DATABASE_URL = "postgresql://aziz:aziz@postgres-container:5432/aziz"
+DATABASE_URL = "postgresql://aziz:aziz@172.17.0.3:5432/aziz"
 
 
 def get_connection():
