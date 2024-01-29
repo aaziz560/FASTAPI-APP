@@ -10,11 +10,37 @@ pipeline {
             }
         }
 
+        stage('EXECUTE POSTGRES') {
+            steps {
+                script {
+                    sh 'docker run --name postgres-container \
+                      -e POSTGRES_USER=aziz \
+                      -e POSTGRES_PASSWORD=aziz \
+                      -p 5432:5432 \
+                      -v local_pgdata:/var/lib/postgresql/data \
+                      -d postgres:latest'
+                }
+            }
+        }
+
+
+        stage('Checkout UNITTESTS') {
+            steps {
+                script {
+                    sh 'python3 -m venv venv'
+                    sh 'chmod +x install_dependecies.sh'
+                    sh 'sh install_dependecies.sh'
+                    
+                    
+                }
+            }
+        }
+
        
         stage('Deploy with Docker Compose') {
             steps {
                 script {
-                    bat 'docker-compose up -d'
+                    sh 'docker-compose up -d'
                 }
             }
         }
