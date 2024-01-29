@@ -16,7 +16,7 @@ pipeline {
                     sh 'docker run --name test-postgres \
                       -e POSTGRES_USER=aziz \
                       -e POSTGRES_PASSWORD=aziz \
-                      -p 5432:5432 \
+                      -p 5435:5432 \
                       -v local_pgdata:/var/lib/postgresql/data \
                       -d postgres:latest'
                 }
