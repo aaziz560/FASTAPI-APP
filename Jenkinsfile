@@ -13,7 +13,7 @@ pipeline {
         stage('EXECUTE POSTGRES') {
             steps {
                 script {
-                    sh 'docker run --name postgres-container \
+                    sh 'docker run --name test-postgres \
                       -e POSTGRES_USER=aziz \
                       -e POSTGRES_PASSWORD=aziz \
                       -p 5432:5432 \
