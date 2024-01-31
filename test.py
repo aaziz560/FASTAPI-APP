@@ -1,5 +1,5 @@
 import unittest
-from main import create_table, create_person, get_people, delete_person, update_person
+from main import create_person, get_people, delete_person, update_person
 from main import Person, PersonDB
 
 from sqlalchemy import create_engine
@@ -14,6 +14,10 @@ engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+def create_table():
+    with engine.connect() as connection:
+        if not connection.dialect.has_table(connection, "people"):
+            Base.metadata.create_all(bind=engine)
 
 class TestApp(unittest.TestCase):
     def setUp(self):
