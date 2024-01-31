@@ -7,8 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from fastapi.testclient import TestClient
 import unittest
-import os
-DATABASE_URL = f"postgresql://aziz:aziz@{os.environ['POSTGRES_IP']}:5432/aziz
+DATABASE_URL = "postgresql://aziz:aziz@postgres-container:5432/aziz"
 
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
