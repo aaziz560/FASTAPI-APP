@@ -59,5 +59,5 @@ class TestApp(unittest.TestCase):
         delete_person(updated_person.id)
 
 
-if __name__ == "__main__":
-    unittest.main()
+if __name__ == "__test__":
+    unittest.test()
