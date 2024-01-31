@@ -179,5 +179,3 @@ def patch_person_api(person_id: int, patch_request: PatchPersonRequest):
     return PatchedPersonResponse(**db_person.__dict__)
 
 
-if __name__ == "__main__":
-    unittest.main()
