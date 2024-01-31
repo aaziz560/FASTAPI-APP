@@ -7,7 +7,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from fastapi.testclient import TestClient
 import unittest
-DATABASE_URL = "postgresql://aziz:aziz@postgres-container:5432/aziz"
+
+DATABASE_URL = "postgresql://aziz:aziz@localhost:5432/aziz"
 
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
@@ -91,23 +92,23 @@ class PersonResponse(BaseModel):
     age: int
 
 
-def create_person(person: Person):
+def create_person(person: Person, sessionLocal):
     db_person = PersonDB(**person.dict())
-    with SessionLocal() as db:
+    with sessionLocal as db:
         db.add(db_person)
         db.commit()
         db.refresh(db_person)
     return db_person
 
 
-def get_people():
-    with SessionLocal() as db:
+def get_people(sessionLocal):
+    with sessionLocal as db:
         people_query = db.query(PersonDB).all()
         return people_query
 
 
-def delete_person(person_id: int):
-    with SessionLocal() as db:
+def delete_person(person_id: int, sessionLocal):
+    with sessionLocal as db:
         existing_person = db.query(PersonDB).filter(PersonDB.id == person_id).first()
         if not existing_person:
             raise HTTPException(status_code=406, detail="Person not available")
@@ -117,8 +118,8 @@ def delete_person(person_id: int):
         return existing_person
 
 
-def update_person(person_id: int, updated_person: UpdatedPersonRequest):
-    with SessionLocal() as db:
+def update_person(person_id: int, updated_person: UpdatedPersonRequest, sessionLocal):
+    with sessionLocal as db:
         existing_person = db.query(PersonDB).filter(PersonDB.id == person_id).first()
         if not existing_person:
             raise HTTPException(status_code=404, detail="Person not available")
@@ -150,25 +151,25 @@ def patch_person(person_id: int, patch_request: PatchPersonRequest):
 
 @app.post("/people", response_model=PersonResponse)
 async def create_person_api(person: Person):
-    db_person = create_person(person)
+    db_person = create_person(person, SessionLocal)
     return PersonResponse(**db_person.__dict__)
 
 
 @app.get("/people", response_model=List[PersonResponse])
 async def get_people_api():
-    people_query = get_people()
+    people_query = get_people(SessionLocal)
     return [PersonResponse(**person.__dict__) for person in people_query]
 
 
 @app.delete("/people/{person_id}", response_model=DeletedPersonResponse)
 def delete_person_api(person_id: int):
-    db_person = delete_person(person_id)
+    db_person = delete_person(person_id, SessionLocal)
     return DeletedPersonResponse(**db_person.__dict__)
 
 
 @app.put("/people/{person_id}", response_model=UpdatedPersonResponse)
 def update_person_api(person_id: int, updated_person: UpdatedPersonRequest):
-    db_person = update_person(person_id, updated_person)
+    db_person = update_person(person_id, updated_person, SessionLocal)
     return UpdatedPersonResponse(**db_person.__dict__)
 
 
@@ -176,5 +177,3 @@ def update_person_api(person_id: int, updated_person: UpdatedPersonRequest):
 def patch_person_api(person_id: int, patch_request: PatchPersonRequest):
     db_person = patch_person(person_id, patch_request)
     return PatchedPersonResponse(**db_person.__dict__)
-
-
