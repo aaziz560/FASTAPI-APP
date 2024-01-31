@@ -13,28 +13,27 @@ pipeline {
         stage('EXECUTE POSTGRES') {
             steps {
                 script {
-                    sh 'docker run --name test-postgres \
-                      -e POSTGRES_USER=aziz \
-                      -e POSTGRES_PASSWORD=aziz \
-                      -p 5435:5432 \
-                      -v local_pgdata:/var/lib/postgresql/data \
-                      -d postgres:latest'
+                    // Exécutez la commande Docker inspect pour obtenir l'adresse IP du conteneur PostgreSQL
+                    def postgresIP = sh(script: 'docker inspect -f \'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}\' postgres-container', returnStdout: true).trim()
+        
+                    // Exposez l'adresse IP de PostgreSQL en tant que variable d'environnement
+                    sh "export POSTGRES_IP=$postgresIP"
+        
+                    // Lancez le conteneur PostgreSQL
+                    sh 'docker-compose up -d'
                 }
             }
         }
-
 
         stage('Checkout UNITTESTS') {
             steps {
                 script {
-                    sh 'python3 -m venv venv'
-                    sh 'chmod +x install_dependecies.sh'
-                    sh 'sh install_dependecies.sh'
-                    
-                    
+                    // Utilisez la variable d'environnement POSTGRES_IP lors de l'exécution des tests
+                    sh "export POSTGRES_IP=$POSTGRES_IP && python3 -m unittest test.py"
                 }
             }
         }
+
 
        
         stage('Deploy with Docker Compose') {
