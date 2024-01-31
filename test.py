@@ -1,6 +1,6 @@
 import unittest
 from main import create_table, create_person, get_people, delete_person, update_person
-from main import Person, PersonDB
+
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -15,7 +15,37 @@ Base = declarative_base()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
+
+metadata = MetaData()
+
+people = Table(
+    "people",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("first_name", String(100)),
+    Column("last_name", String(100)),
+    Column("age", Integer),
+)
+
+
+class PersonDB(Base):
+    __tablename__ = "people"
+    id = Column(Integer, primary_key=True, index=True)
+    first_name = Column(String(100))
+    last_name = Column(String(100))
+    age = Column(Integer)
+
+
+
+def create_table():
+    with engine.connect() as connection:
+        if not connection.dialect.has_table(connection, "people"):
+            Base.metadata.create_all(bind=engine)
+
+
 class TestApp(unittest.TestCase):
+    
+            
     def setUp(self):
         create_table()
 
