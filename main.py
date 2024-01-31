@@ -8,7 +8,7 @@ from pydantic import BaseModel
 from fastapi.testclient import TestClient
 import unittest
 
-DATABASE_URL = "postgresql://aziz:aziz@localhost:5432/aziz"
+DATABASE_URL = "postgresql://aziz:aziz@postgres-container:5432/aziz"
 
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
