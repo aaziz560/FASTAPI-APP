@@ -1,6 +1,6 @@
 import unittest
 from main import create_person, get_people, delete_person, update_person
-from main import Person, PersonDB
+
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -13,6 +13,29 @@ DATABASE_URL = "postgresql://aziz:aziz@test-postgres:5432/aziz"
 engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+
+people = Table(
+    "people",
+    metadata,
+    Column("id", Integer, primary_key=True, index=True),
+    Column("first_name", String(100)),
+    Column("last_name", String(100)),
+    Column("age", Integer),
+)
+
+
+class PersonDB(Base):
+    __tablename__ = "people"
+    id = Column(Integer, primary_key=True, index=True)
+    first_name = Column(String(100))
+    last_name = Column(String(100))
+    age = Column(Integer)
+
+class Person(BaseModel):
+    first_name: str
+    last_name: str
+    age: int
 
 def create_table():
     with engine.connect() as connection:
