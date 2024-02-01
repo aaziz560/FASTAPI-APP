@@ -18,7 +18,7 @@ class TestApp(unittest.TestCase):
     
             
     def setUp(self):
-        create_table()
+        create_table(TEST_DATABASE_URL)
 
     def tearDown(self):
         with get_test_session(TEST_DATABASE_URL) as db:
