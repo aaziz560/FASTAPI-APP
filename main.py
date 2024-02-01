@@ -50,6 +50,12 @@ def create_table(database_url):
         if not connection.dialect.has_table(connection, "people"):
             Base.metadata.create_all(bind=create_engine(database_url))
 
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 
