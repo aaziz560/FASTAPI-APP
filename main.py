@@ -43,10 +43,10 @@ class PersonDB(Base):
 app = FastAPI()
 
 
-def create_table():
-    with engine.connect() as connection:
+def create_table(database_url):
+    with create_engine(database_url).connect() as connection:
         if not connection.dialect.has_table(connection, "people"):
-            Base.metadata.create_all(bind=engine)
+            Base.metadata.create_all(bind=create_engine(database_url))
 
 
 
@@ -185,4 +185,4 @@ def patch_person_api(person_id: int, patch_request: PatchPersonRequest):
 
 
 if __name__ == "__main__":
-    create_table()
+    create_table(DATABASE_URL)
