@@ -32,8 +32,11 @@ pipeline {
                     sh 'python3 -m venv venv'
                     sh 'chmod +x install_dependecies.sh'
                     sh 'sh install_dependecies.sh'
-                    sh 'echo "127.0.0.1 test-postgres" >> /etc/hosts'
                     
+                    def postgresIP = sh(script: 'docker inspect -f "{{.NetworkSettings.IPAddress}}" test-postgres', returnStdout: true).trim()
+                    
+                    sh "echo 'export POSTGRES_IP=${postgresIP}' >> ~/.bashrc"
+                    sh 'source ~/.bashrc'
                 }
             }
         }
