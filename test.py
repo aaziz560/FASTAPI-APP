@@ -63,3 +63,5 @@ class TestApp(unittest.TestCase):
 
 
 
+if __name__ == "__test__":
+    unittest.test()
