@@ -20,7 +20,7 @@ pipeline {
                       -v local_pgdata:/var/lib/postgresql/data \
                       -d postgres:latest'
 
-                    sleep time: 20, unit: 'SECONDS'
+                    
                 }
             }
         }
