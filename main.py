@@ -7,6 +7,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from pydantic import BaseModel
 from fastapi.testclient import TestClient
 import unittest
+from fastapi import Depends
 
 DATABASE_URL = "postgresql://aziz:aziz@postgres-container:5432/aziz"
 
@@ -97,12 +98,11 @@ class PersonResponse(BaseModel):
     age: int
 
 
-def create_person(person: Person, sessionLocal):
+def create_person(person: Person, db: Session):
     db_person = PersonDB(**person.dict())
-    with sessionLocal as db:
-        db.add(db_person)
-        db.commit()
-        db.refresh(db_person)
+    db.add(db_person)
+    db.commit()
+    db.refresh(db_person)
     return db_person
 
 
@@ -155,8 +155,8 @@ def patch_person(person_id: int, patch_request: PatchPersonRequest):
 
 
 @app.post("/people", response_model=PersonResponse)
-async def create_person_api(person: Person):
-    db_person = create_person(person, SessionLocal)
+async def create_person_api(person: Person, db: Session = Depends(get_db)):
+    db_person = create_person(person, db)
     return PersonResponse(**db_person.__dict__)
 
 
