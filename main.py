@@ -14,6 +14,12 @@ engine = create_engine(DATABASE_URL)
 Base = declarative_base()
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+def get_test_session(database_url):
+    test_engine = create_engine(database_url)
+    test_SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
+    return test_SessionLocal
+    
+
 metadata = MetaData()
 
 people = Table(
