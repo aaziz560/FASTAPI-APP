@@ -1,5 +1,5 @@
 import unittest
-from main import create_table, create_person, get_people, delete_person, update_person, get_test_session()
+from main import create_table, create_person, get_people, delete_person, update_person, get_test_session
 from main import PersonDB , Person
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
