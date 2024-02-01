@@ -4,9 +4,10 @@ from main import PersonDB , Person
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+import os
 
 
-TEST_DATABASE_URL = "postgresql://aziz:aziz@test-postgres:5432/aziz"
+TEST_DATABASE_URL = f"postgresql://aziz:aziz@{os.environ['POSTGRES_IP']}:5432/aziz"
 
 
 
