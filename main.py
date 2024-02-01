@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from fastapi.testclient import TestClient
 import unittest
 from fastapi import Depends
+from sqlalchemy.orm import Session
 
 DATABASE_URL = "postgresql://aziz:aziz@postgres-container:5432/aziz"
 
