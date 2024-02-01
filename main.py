@@ -43,7 +43,6 @@ def create_table():
             Base.metadata.create_all(bind=engine)
 
 
-create_table()
 
 
 class Person(BaseModel):
@@ -177,3 +176,7 @@ def update_person_api(person_id: int, updated_person: UpdatedPersonRequest):
 def patch_person_api(person_id: int, patch_request: PatchPersonRequest):
     db_person = patch_person(person_id, patch_request)
     return PatchedPersonResponse(**db_person.__dict__)
+
+
+if __name__ == "__main__":
+    create_table()
