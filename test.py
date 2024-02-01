@@ -20,49 +20,44 @@ class TestApp(unittest.TestCase):
             
     def setUp(self):
         create_table(TEST_DATABASE_URL)
+        self.session = get_test_session(TEST_DATABASE_URL)
 
     def tearDown(self):
-        with get_test_session(TEST_DATABASE_URL) as db:
-            db.query(PersonDB).delete()
-            db.commit()
+        self.session.close()
 
     def test_create_person(self):
-        test_SessionLocal = get_test_session(TEST_DATABASE_URL)
         person_data = Person(first_name="Aziz", last_name="FAFI", age=25)
-        db_person = create_person(person_data, test_SessionLocal)
+        db_person = create_person(person_data, self.session)
         self.assertEqual(db_person.first_name, "Aziz")
         self.assertEqual(db_person.last_name, "FAFI")
         self.assertEqual(db_person.age, 25)
-        delete_person(db_person.id)
+        delete_person(db_person.id, self.session)
 
     def test_get_people(self):
-        test_SessionLocal = get_test_session(TEST_DATABASE_URL)
         person_data = Person(first_name="Aziz", last_name="FAFI", age=26)
-        db_person = create_person(person_data, test_SessionLocal)
-        people = get_people(SessionLocal)
+        db_person = create_person(person_data, self.session)
+        people = get_people(self.session)
         self.assertEqual(len(people), 1)
         self.assertEqual(db_person.first_name, "Aziz")
         self.assertEqual(db_person.last_name, "FAFI")
         self.assertEqual(db_person.age, 26)
-        delete_person(db_person.id, SessionLocal)
+        delete_person(db_person.id, self.session)
 
     def test_delete_person(self):
-        test_SessionLocal = get_test_session(TEST_DATABASE_URL)
         person_data = Person(first_name="Aziz", last_name="FAFI", age=28)
-        person = create_person(person_data, test_SessionLocal)
-        deleted_person = delete_person(person.id, SessionLocal)
+        person = create_person(person_data, self.session)
+        deleted_person = delete_person(person.id, self.session)
         self.assertEqual(deleted_person.first_name, "Aziz")
 
     def test_update_person(self):
-        test_SessionLocal = get_test_session(TEST_DATABASE_URL)
         person_data = Person(first_name="Aziz", last_name="FAFI", age=29)
-        person = create_person(person_data, test_SessionLocal)
+        person = create_person(person_data, self.session)
         updated_data = Person(first_name="Achref", last_name="KHMIRI", age=30)
-        updated_person = update_person(person.id, updated_data, SessionLocal)
+        updated_person = update_person(person.id, updated_data, self.session)
         self.assertEqual(updated_person.first_name, "Achref")
         self.assertEqual(updated_person.last_name, "KHMIRI")
         self.assertEqual(updated_person.age, 30)
-        delete_person(updated_person.id)
+        delete_person(updated_person.id, self.session)
 
 
 
